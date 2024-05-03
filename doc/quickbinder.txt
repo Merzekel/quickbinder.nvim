@@ -1,0 +1,40 @@
+===== API =====
+quickbinder.bind(mode, keys, act, dsc, opts) - Single keybind
+mode - Set modes for keybind - Defaults to {'n', 'v'}
+keys - Key sequence to bind action to - Ex. 'Zls', '<leader>lx', '<Tab>sc'
+act  - Action that is called
+desc - Description of keybind - Optional
+opts - Options to use for keybind - Defaults to { remap = true }
+
+quickbinder.qb
+quickbinder.quickbind(tbl, keys) - Map a table of keybinds
+tbl  - Table of keybinds
+keys - Key sequence prefix - Defaults to ''
+
+quickbinder.run(cmd) - Create command string
+
+===== EXAMPLE =====
+local qb = require('quickbinder')
+local run, cmd = qb.run, vim.cmd
+
+local function huh()
+  cmd('echo "huh"')
+end
+qb.qb( {
+  mode = 'nv', -- Set target modes
+
+  ['<leader>h'] = { act = run('echo "Hello World"'), desc = 'Print hello world`, opts = { noremap = true } }, -- act must be defined
+  ['<leader>gb'] = { act = run('echo "Goodbye World"'), 'Say goodbye to the world', opts = { noremap = true } }, -- the desc parameter can be implicit
+  ['<leader>o'] = { act = run('new'), 'Open new window with a empty buffer', { remap = true, silent = true } }, -- so can the opts parameter
+  ['<leader>w'] = { act = huh, { noremap = true }, 'Huh' }, -- description and opts have no specific order
+    
+  ['<leader>'] = {
+    b = {
+      d = { act = 'bd' },
+      n = { act = 'bn' },
+      p = { act = 'bp' }
+    },
+    l = { mode = 'v', act = '<Esc>', 'Exit visual mode' }
+  }
+} )
+

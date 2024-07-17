@@ -11,11 +11,9 @@ local function bind(mode, keys, act, dsc, opts)
   local ops = opts
   ops.callback = true
   ops.desc = dsc
-  local action
   local act_type = type(act)
   assert(((act_type == 'function') or (act_type == 'string')), 'keybind ' .. keys .. ' has an invalid action type')
-  action = act
-  map(mode, keys, action, ops)
+  map(mode, keys, act, ops)
 end
 
 local function quickbind(tbl, keys)
@@ -83,7 +81,9 @@ end
 
 -- Quick wrapper for command strings
 local function run(str)
-  return '<cmd>' .. str .. '<cr>'
+  return function()
+    vim.cmd(str)
+  end
 end
 
 return {
